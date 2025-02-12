@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,19 +15,33 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('pages.auth.auth-login');
+    return view('pages.app.dashboard-home');
 });
 
 Route::middleware(['auth'])->group(function () {
     Route::get('home', function () {
-        return view('pages.app.dashboard-siakad', ['type_menu' => '']);
+        return view('pages.app.dashboard-sig', ['type_menu' => '']);
     })->name('home');
+    Route::resource('user', UserController::class);
 });
 
+Route::get('/tambah-data', function () {
+    return view('pages.app.tambah-data', ['type_menu' => '']);
+})->name('tambah.data');
 
-// Route::get('/login', function () {
-//     return view('pages.auth.auth-login');
-// })->name('login');
+Route::get('/list-data', function () {
+    return view('pages.app.list-data', ['type_menu' => '']);
+})->name('list.data');
+
+Route::get('/dashboard-admin', function () {
+    return view('pages.app.dashboard-sig');
+})->name('dashboard.admin');
+
+// Route::get('/dashboard-home', function () {
+//     return view('pages.depan.dashboard-home', ['type_menu' => '']);
+// })->name('dashboard.home');
+
+
 
 // Route::get('/register', function () {
 //     return view('pages.auth.auth-register');
