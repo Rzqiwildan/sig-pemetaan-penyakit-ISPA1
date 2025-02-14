@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PemetaanIspaController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -36,6 +37,13 @@ Route::get('/list-data', function () {
 Route::get('/dashboard-admin', function () {
     return view('pages.app.dashboard-sig');
 })->name('dashboard.admin');
+
+// Route untuk CRUD PemetaanIspa
+Route::post('/tambah-data/store', [PemetaanIspaController::class, 'store'])->name('pemetaan.store');
+Route::get('/list-data', [PemetaanIspaController::class, 'index'])->name('list.data');
+Route::get('/get-locations', [PemetaanIspaController::class, 'getLocations'])->name('get.locations');
+Route::put('/update-data/{id}', [PemetaanIspaController::class, 'update'])->name('pemetaan.update');
+Route::delete('/delete-data/{id}', [PemetaanIspaController::class, 'destroy'])->name('pemetaan.destroy');
 
 // Route::get('/dashboard-home', function () {
 //     return view('pages.depan.dashboard-home', ['type_menu' => '']);

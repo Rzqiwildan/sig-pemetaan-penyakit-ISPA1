@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Users')
+@section('title', 'List Data ISPA')
 
 @push('style')
     <!-- CSS Libraries -->
@@ -11,10 +11,10 @@
     <div class="main-content">
         <section class="section">
             <div class="section-header">
-                <h1>List Data</h1>
+                <h1>List Data ISPA</h1>
                 <div class="section-header-breadcrumb">
-                    <div class="breadcrumb-item active"><a href="#">Dashboard</a></div>
-                    <div class="breadcrumb-item"><a>List Data</a></div>
+                    <div class="breadcrumb-item active"><a href="{{ route('dashboard.admin') }}">Dashboard</a></div>
+                    <div class="breadcrumb-item">List Data</div>
                 </div>
             </div>
 
@@ -29,14 +29,19 @@
                     <div class="col-12">
                         <div class="card">
                             <div class="card-header">
-                                <h4>List Data</h4>
+                                <h4>List Data ISPA</h4>
+                                <div class="card-header-action">
+                                    <a href="{{ route('tambah.data') }}" class="btn btn-primary">
+                                        Tambah Data Baru
+                                    </a>
+                                </div>
                             </div>
                             <div class="card-body">
-
                                 <div class="float-right">
-                                    <form method="GET" action="">
+                                    <form method="GET">
                                         <div class="input-group">
-                                            <input type="text" class="form-control" placeholder="Search" name="name" value="{{ request('name') }}">
+                                            <input type="text" class="form-control" placeholder="Cari nama desa..."
+                                                name="search" value="{{ request('search') }}">
                                             <div class="input-group-append">
                                                 <button class="btn btn-primary"><i class="fas fa-search"></i></button>
                                             </div>
@@ -50,6 +55,7 @@
                                     <table class="table table-striped">
                                         <thead>
                                             <tr>
+                                                <th>No</th>
                                                 <th>Nama Desa</th>
                                                 <th>Jumlah Terkena</th>
                                                 <th>Latitude</th>
@@ -59,43 +65,48 @@
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
-                                        {{-- <tbody>
-                                            @foreach ($data as $item)
+                                        <tbody>
+                                            @forelse ($locations as $location)
                                                 <tr>
-                                                    <td>{{ $item->nama_penyakit }}</td>
-                                                    <td>{{ $item->jumlah_terkena }}</td>
-                                                    <td>{{ $item->latitude }}</td>
-                                                    <td>{{ $item->longitude }}</td>
+                                                    <td>{{ $loop->iteration }}</td>
+                                                    <td>{{ $location->nama_desa }}</td>
+                                                    <td>{{ $location->jumlah_terkena }}</td>
+                                                    <td>{{ $location->latitude }}</td>
+                                                    <td>{{ $location->longitude }}</td>
                                                     <td>
-                                                        <span class="badge" style="background-color: {{ $item->marker_color }};">
-                                                            {{ ucfirst($item->marker_color) }}
+                                                        <span class="badge badge-{{ $location->marker_color }}">
+                                                            {{ ucfirst($location->marker_color) }}
                                                         </span>
                                                     </td>
-                                                    <td>{{ $item->address }}</td>
+                                                    <td>{{ $location->address }}</td>
                                                     <td>
-                                                        <div class="d-flex">
-                                                            <a href="{{ route('data.edit', $item->id) }}" class="btn btn-sm btn-info mr-2">
-                                                                <i class="fas fa-edit"></i> Edit
-                                                            </a>
-                                                            <form action="{{ route('data.destroy', $item->id) }}" method="POST">
+                                                        <div class="buttons">
+                                                            <a href="{{ url('update-data', $location->id) }}"
+                                                                class="btn btn-icon btn-info"><i
+                                                                    class="fas fa-edit"></i></a>
+                                                            <form action="{{ url('delete-data', $location->id) }}"
+                                                                method="POST" class="d-inline">
                                                                 @csrf
                                                                 @method('DELETE')
-                                                                <button type="submit" class="btn btn-sm btn-danger confirm-delete">
-                                                                    <i class="fas fa-times"></i> Delete
+                                                                <button class="btn btn-icon btn-danger btn-delete">
+                                                                    <i class="fas fa-trash"></i>
                                                                 </button>
                                                             </form>
                                                         </div>
                                                     </td>
                                                 </tr>
-                                            @endforeach
-                                        </tbody> --}}
+                                            @empty
+                                                <tr>
+                                                    <td colspan="8" class="text-center">Tidak ada data</td>
+                                                </tr>
+                                            @endforelse
+                                        </tbody>
                                     </table>
                                 </div>
 
-                                {{-- <div class="float-right">
-                                    {{ $data->withQueryString()->links() }}
-                                </div> --}}
-
+                                <div class="float-right">
+                                    {{ $locations->links() }}
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -110,4 +121,25 @@
     <script src="{{ asset('library/selectric/public/jquery.selectric.min.js') }}"></script>
     <!-- Page Specific JS File -->
     <script src="{{ asset('js/page/features-posts.js') }}"></script>
+    <script>
+        $('.btn-delete').click(function(e) {
+            e.preventDefault();
+            var form = $(this).closest('form');
+
+            Swal.fire({
+                title: 'Apakah Anda yakin?',
+                text: "Data yang dihapus tidak dapat dikembalikan!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, hapus!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            });
+        });
+    </script>
 @endpush

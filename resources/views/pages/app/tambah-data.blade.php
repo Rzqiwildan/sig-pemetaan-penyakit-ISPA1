@@ -16,17 +16,32 @@
     <div class="main-content">
         <section class="section">
             <div class="section-header">
-                <h1>New User</h1>
+                <h1>Tambah Data ISPA</h1>
                 <div class="section-header-breadcrumb">
-                    <div class="breadcrumb-item active"><a href="#">Dashboard</a></div>
+                    <div class="breadcrumb-item active"><a href="{{ route('dashboard.admin') }}">Dashboard</a></div>
                     <div class="breadcrumb-item">Tambah Data</div>
                 </div>
             </div>
 
             <div class="section-body">
                 <div class="card">
-                    <form action="" method="POST">
+                    @if(session('success'))
+                        <div class="alert alert-success">
+                            {{ session('success') }}
+                        </div>
+                    @endif
 
+                    @if ($errors->any())
+                        <div class="alert alert-danger">
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+
+                    <form action="{{ route('pemetaan.store') }}" method="POST">
                         @csrf
                         <div class="card-header">
                             <h4>Data Baru</h4>
@@ -34,38 +49,61 @@
                         <div class="card-body">
                             <div class="form-group">
                                 <label>Nama Desa</label>
-                                <input type="text" class="form-control" name="nama_penyakit">
+                                <input type="text" class="form-control @error('nama_desa') is-invalid @enderror" 
+                                    name="nama_desa" value="{{ old('nama_desa') }}" required>
+                                @error('nama_desa')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
                             </div>
 
                             <div class="form-group">
                                 <label>Jumlah Terkena</label>
-                                <input type="text" class="form-control" name="jumlah_terkena">
+                                <input type="number" class="form-control @error('jumlah_terkena') is-invalid @enderror" 
+                                    name="jumlah_terkena" value="{{ old('jumlah_terkena') }}" required>
+                                @error('jumlah_terkena')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
                             </div>
 
                             <div class="form-group">
                                 <label>Latitude</label>
-                                <input type="text" class="form-control" id="latitude" name="latitude">
+                                <input type="text" class="form-control @error('latitude') is-invalid @enderror" 
+                                    id="latitude" name="latitude" value="{{ old('latitude') }}" required>
+                                @error('latitude')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
                             </div>
 
                             <div class="form-group">
                                 <label>Longitude</label>
-                                <input type="text" class="form-control" id="longitude" name="longitude">
+                                <input type="text" class="form-control @error('longitude') is-invalid @enderror" 
+                                    id="longitude" name="longitude" value="{{ old('longitude') }}" required>
+                                @error('longitude')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
                             </div>
 
                             <div class="form-group">
-    <label>Marker Color</label>
-    <select id="markerColor" class="form-control" name="marker_color">
-        <option value="red">Red</option>
-        <option value="blue">Blue</option>
-        <option value="green">Green</option>
-        <option value="orange">Orange</option>
-    </select>
-</div>
-
+                                <label>Marker Color</label>
+                                <select id="markerColor" class="form-control @error('marker_color') is-invalid @enderror" 
+                                    name="marker_color" required>
+                                    <option value="red" {{ old('marker_color') == 'red' ? 'selected' : '' }}>Red</option>
+                                    <option value="blue" {{ old('marker_color') == 'blue' ? 'selected' : '' }}>Blue</option>
+                                    <option value="green" {{ old('marker_color') == 'green' ? 'selected' : '' }}>Green</option>
+                                    <option value="orange" {{ old('marker_color') == 'orange' ? 'selected' : '' }}>Orange</option>
+                                </select>
+                                @error('marker_color')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
 
                             <div class="form-group mb-0">
                                 <label>Address</label>
-                                <textarea class="form-control" data-height="150" name="address"></textarea>
+                                <textarea class="form-control @error('address') is-invalid @enderror" 
+                                    data-height="150" name="address">{{ old('address') }}</textarea>
+                                @error('address')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
                             </div>
 
                             <div class="form-group mt-3">
@@ -74,7 +112,7 @@
                             </div>
                         </div>
                         <div class="card-footer text-right">
-                            <button class="btn btn-primary">Submit</button>
+                            <button type="submit" class="btn btn-primary">Submit</button>
                         </div>
                     </form>
                 </div>
@@ -112,8 +150,8 @@
         function updateMarker(lat, lng) {
             marker.setLatLng([lat, lng]);
             map.setView([lat, lng], 13);
-            document.getElementById('latitude').value = lat;
-            document.getElementById('longitude').value = lng;
+            document.getElementById('latitude').value = lat.toFixed(8);
+            document.getElementById('longitude').value = lng.toFixed(8);
         }
 
         document.getElementById('latitude').addEventListener('input', function() {
@@ -134,8 +172,8 @@
 
         marker.on('dragend', function(e) {
             var position = marker.getLatLng();
-            document.getElementById('latitude').value = position.lat;
-            document.getElementById('longitude').value = position.lng;
+            document.getElementById('latitude').value = position.lat.toFixed(8);
+            document.getElementById('longitude').value = position.lng.toFixed(8);
         });
 
         document.getElementById('markerColor').addEventListener('change', function() {
