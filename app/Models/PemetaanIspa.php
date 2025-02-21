@@ -19,6 +19,6 @@ class PemetaanIspa extends Model
 
     public function penduduk()
     {
-        return $this->hasMany(Penduduk::class, 'pemetaanispa_id');
+        return $this->hasMany(Penduduk::class, 'pemetaan_ispa_id');
     }
 }
