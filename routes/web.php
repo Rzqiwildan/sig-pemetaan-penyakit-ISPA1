@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PemetaanIspaController;
 use App\Http\Controllers\PendudukController;
 use App\Http\Controllers\UserController;
@@ -25,6 +26,9 @@ Route::middleware(['auth'])->group(function () {
         return view('pages.app.dashboard-sig', ['type_menu' => '']);
     })->name('home');
     Route::resource('user', UserController::class);
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/api/pie-chart-data', [DashboardController::class, 'pieChartData'])
+    ->name('dashboard.piechart.data');
 });
 
 Route::get('/tambah-data', function () {

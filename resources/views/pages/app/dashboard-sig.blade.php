@@ -80,12 +80,12 @@
             <!-- Pie Chart Section -->
             <div class="row mt-4">
                 <div class="col-lg-6 mx-auto">
-                    <div class="card">
+                    <div class="card"> <!-- Menghapus class mb-8 -->
                         <div class="card-header">
-                            <h4>Data Statistik</h4>
+                            <h4>Data Statistik Penduduk per Desa</h4>
                         </div>
-                        <div class="card-body">
-                            <canvas id="pieChart"></canvas>
+                        <div class="card-body" style="height: 450px;"> <!-- Menambahkan fixed height -->
+                            @include('components.pie-chart')
                         </div>
                     </div>
                 </div>
@@ -97,28 +97,4 @@
 @push('scripts')
     <!-- JS Libraries -->
     <script src="{{ asset('library/chart.js/dist/Chart.min.js') }}"></script>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            var ctx = document.getElementById("pieChart").getContext("2d");
-            var totalAdmin = parseInt(document.getElementById("totalAdmin").innerText);
-            var totalNews = parseInt(document.getElementById("totalNews").innerText);
-            var totalReports = parseInt(document.getElementById("totalReports").innerText);
-            var totalOnlineUsers = parseInt(document.getElementById("totalOnlineUsers").innerText);
-
-            var data = {
-                labels: ["Admin", "News", "Reports", "Online Users"],
-                datasets: [{
-                    data: [totalAdmin, totalNews, totalReports, totalOnlineUsers],
-                    backgroundColor: ["#3498db", "#e74c3c", "#f1c40f", "#2ecc71"],
-                    hoverBackgroundColor: ["#2980b9", "#c0392b", "#f39c12", "#27ae60"]
-                }]
-            };
-
-            new Chart(ctx, {
-                type: "pie",
-                data: data
-            });
-        });
-    </script>
 @endpush
