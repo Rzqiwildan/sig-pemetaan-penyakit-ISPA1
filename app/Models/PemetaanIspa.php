@@ -16,4 +16,9 @@ class PemetaanIspa extends Model
         'marker_color',
         'address'
     ];
+
+    public function penduduk()
+    {
+        return $this->hasMany(Penduduk::class, 'pemetaanispa_id');
+    }
 }

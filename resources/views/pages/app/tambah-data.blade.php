@@ -25,7 +25,7 @@
 
             <div class="section-body">
                 <div class="card">
-                    @if(session('success'))
+                    @if (session('success'))
                         <div class="alert alert-success">
                             {{ session('success') }}
                         </div>
@@ -49,7 +49,7 @@
                         <div class="card-body">
                             <div class="form-group">
                                 <label>Nama Desa</label>
-                                <input type="text" class="form-control @error('nama_desa') is-invalid @enderror" 
+                                <input type="text" class="form-control @error('nama_desa') is-invalid @enderror"
                                     name="nama_desa" value="{{ old('nama_desa') }}" required>
                                 @error('nama_desa')
                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -58,8 +58,8 @@
 
                             <div class="form-group">
                                 <label>Jumlah Terkena</label>
-                                <input type="number" class="form-control @error('jumlah_terkena') is-invalid @enderror" 
-                                    name="jumlah_terkena" value="{{ old('jumlah_terkena') }}" required>
+                                <input type="number" class="form-control @error('jumlah_terkena') is-invalid @enderror"
+                                    name="jumlah_terkena" value="{{ old('jumlah_terkena', 0) }}" readonly>
                                 @error('jumlah_terkena')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -67,8 +67,9 @@
 
                             <div class="form-group">
                                 <label>Latitude</label>
-                                <input type="text" class="form-control @error('latitude') is-invalid @enderror" 
-                                    id="latitude" name="latitude" value="{{ old('latitude') }}" required>
+                                <input type="text" class="form-control @error('latitude') is-invalid @enderror"
+                                    id="latitude" name="latitude" value="{{ old('latitude') }}"
+                                    onchange="formatCoordinate(this)" required>
                                 @error('latitude')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -76,8 +77,9 @@
 
                             <div class="form-group">
                                 <label>Longitude</label>
-                                <input type="text" class="form-control @error('longitude') is-invalid @enderror" 
-                                    id="longitude" name="longitude" value="{{ old('longitude') }}" required>
+                                <input type="text" class="form-control @error('longitude') is-invalid @enderror"
+                                    id="longitude" name="longitude" value="{{ old('longitude') }}"
+                                    onchange="formatCoordinate(this)" required>
                                 @error('longitude')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -85,26 +87,22 @@
 
                             <div class="form-group">
                                 <label>Marker Color</label>
-                                <select id="markerColor" class="form-control @error('marker_color') is-invalid @enderror" 
+                                <select id="markerColor" class="form-control @error('marker_color') is-invalid @enderror"
                                     name="marker_color" required>
-                                    <option value="red" {{ old('marker_color') == 'red' ? 'selected' : '' }}>Red</option>
-                                    <option value="blue" {{ old('marker_color') == 'blue' ? 'selected' : '' }}>Blue</option>
-                                    <option value="green" {{ old('marker_color') == 'green' ? 'selected' : '' }}>Green</option>
-                                    <option value="orange" {{ old('marker_color') == 'orange' ? 'selected' : '' }}>Orange</option>
+                                    <option value="red" {{ old('marker_color') == 'red' ? 'selected' : '' }}>Red
+                                    </option>
+                                    <option value="blue" {{ old('marker_color') == 'blue' ? 'selected' : '' }}>Blue
+                                    </option>
+                                    <option value="green" {{ old('marker_color') == 'green' ? 'selected' : '' }}>Green
+                                    </option>
+                                    <option value="orange" {{ old('marker_color') == 'orange' ? 'selected' : '' }}>Orange
+                                    </option>
                                 </select>
                                 @error('marker_color')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
 
-                            <div class="form-group mb-0">
-                                <label>Address</label>
-                                <textarea class="form-control @error('address') is-invalid @enderror" 
-                                    data-height="150" name="address">{{ old('address') }}</textarea>
-                                @error('address')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
 
                             <div class="form-group mt-3">
                                 <label>Map Location</label>
@@ -130,6 +128,7 @@
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; OpenStreetMap contributors'
         }).addTo(map);
+
 
         function getIcon(color) {
             return new L.Icon({

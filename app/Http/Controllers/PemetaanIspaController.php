@@ -5,16 +5,19 @@ namespace App\Http\Controllers;
 use App\Models\PemetaanIspa;
 use Illuminate\Http\Request;
 
+
+use App\Models\Penduduk as ModelsPenduduk;
+
 class PemetaanIspaController extends Controller
 {
     public function index(Request $request)
     {
         $query = PemetaanIspa::query();
-        
+
         if ($request->has('search')) {
             $query->where('nama_desa', 'like', '%' . $request->search . '%');
         }
-        
+
         $locations = $query->paginate(10);
         return view('pages.app.list-data', [
             'type_menu' => 'data',
@@ -60,11 +63,56 @@ class PemetaanIspaController extends Controller
         return redirect()->route('list.data')->with('success', 'Data berhasil diperbarui');
     }
 
+    public function edit($id)
+    {
+        $location = PemetaanIspa::findOrFail($id);
+        return view('pages.app.edit-data', [
+            'type_menu' => 'data',
+            'location' => $location
+        ]);
+    }
+
+    public function showDataDesa()
+    {
+        $locations = PemetaanIspa::all();
+        return view('pages.app.data-desa', compact('locations'));
+    }
+
+    public function showDetail($id)
+    {
+        $location = PemetaanIspa::findOrFail($id);
+        $penduduks = ModelsPenduduk::where('pemetaan_ispa_id', $id)->get(); // Ambil penduduk berdasarkan desa
+
+        return view('pages.app.detail-desa', compact('location', 'penduduks'));
+    }
+
+
+
     public function destroy($id)
     {
-        $pemetaan = PemetaanIspa::findOrFail($id);
-        $pemetaan->delete();
+        try {
+            $pemetaan = PemetaanIspa::findOrFail($id);
+            $pemetaan->delete();
 
-        return redirect()->route('list.data')->with('success', 'Data berhasil dihapus');
+            if (request()->ajax()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Data berhasil dihapus'
+                ]);
+            }
+
+            return redirect()->route('list.data')
+                ->with('success', 'Data berhasil dihapus');
+        } catch (\Exception $e) {
+            if (request()->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Gagal menghapus data'
+                ], 500);
+            }
+
+            return redirect()->route('list.data')
+                ->with('error', 'Gagal menghapus data');
+        }
     }
 }

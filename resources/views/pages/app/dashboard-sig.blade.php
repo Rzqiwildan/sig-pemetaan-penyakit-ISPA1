@@ -4,10 +4,8 @@
 
 @push('style')
     <!-- CSS Libraries -->
-    <link rel="stylesheet"
-        href="{{ asset('library/jqvmap/dist/jqvmap.min.css') }}">
-    <link rel="stylesheet"
-        href="{{ asset('library/summernote/dist/summernote-bs4.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('library/jqvmap/dist/jqvmap.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('library/summernote/dist/summernote-bs4.min.css') }}">
 @endpush
 
 @section('main')
@@ -27,7 +25,7 @@
                                 <h4>Total Admin</h4>
                             </div>
                             <div class="card-body">
-                                10
+                                <span id="totalAdmin">10</span>
                             </div>
                         </div>
                     </div>
@@ -42,7 +40,7 @@
                                 <h4>News</h4>
                             </div>
                             <div class="card-body">
-                                42
+                                <span id="totalNews">42</span>
                             </div>
                         </div>
                     </div>
@@ -57,7 +55,7 @@
                                 <h4>Reports</h4>
                             </div>
                             <div class="card-body">
-                                1,201
+                                <span id="totalReports">1201</span>
                             </div>
                         </div>
                     </div>
@@ -72,27 +70,55 @@
                                 <h4>Online Users</h4>
                             </div>
                             <div class="card-body">
-                                47
+                                <span id="totalOnlineUsers">47</span>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-
+            <!-- Pie Chart Section -->
+            <div class="row mt-4">
+                <div class="col-lg-6 mx-auto">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4>Data Statistik</h4>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="pieChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </section>
     </div>
 @endsection
 
 @push('scripts')
-    <!-- JS Libraies -->
-    <script src="{{ asset('library/simpleweather/jquery.simpleWeather.min.js') }}"></script>
+    <!-- JS Libraries -->
     <script src="{{ asset('library/chart.js/dist/Chart.min.js') }}"></script>
-    <script src="{{ asset('library/jqvmap/dist/jquery.vmap.min.js') }}"></script>
-    <script src="{{ asset('library/jqvmap/dist/maps/jquery.vmap.world.js') }}"></script>
-    <script src="{{ asset('library/summernote/dist/summernote-bs4.min.js') }}"></script>
-    <script src="{{ asset('library/chocolat/dist/js/jquery.chocolat.min.js') }}"></script>
 
-    <!-- Page Specific JS File -->
-    <script src="{{ asset('js/page/index-0.js') }}"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var ctx = document.getElementById("pieChart").getContext("2d");
+            var totalAdmin = parseInt(document.getElementById("totalAdmin").innerText);
+            var totalNews = parseInt(document.getElementById("totalNews").innerText);
+            var totalReports = parseInt(document.getElementById("totalReports").innerText);
+            var totalOnlineUsers = parseInt(document.getElementById("totalOnlineUsers").innerText);
+
+            var data = {
+                labels: ["Admin", "News", "Reports", "Online Users"],
+                datasets: [{
+                    data: [totalAdmin, totalNews, totalReports, totalOnlineUsers],
+                    backgroundColor: ["#3498db", "#e74c3c", "#f1c40f", "#2ecc71"],
+                    hoverBackgroundColor: ["#2980b9", "#c0392b", "#f39c12", "#27ae60"]
+                }]
+            };
+
+            new Chart(ctx, {
+                type: "pie",
+                data: data
+            });
+        });
+    </script>
 @endpush

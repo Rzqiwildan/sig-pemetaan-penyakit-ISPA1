@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\PemetaanIspaController;
+use App\Http\Controllers\PendudukController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -30,24 +31,41 @@ Route::get('/tambah-data', function () {
     return view('pages.app.tambah-data', ['type_menu' => '']);
 })->name('tambah.data');
 
-Route::get('/list-data', function () {
-    return view('pages.app.list-data', ['type_menu' => '']);
-})->name('list.data');
+Route::get('/tambah-data-penduduk', [PendudukController::class, 'getTambahDataPenduduk'])->name('tambah.data.penduduk');
+Route::post('/tambah-data-penduduk/store', [PendudukController::class, 'store'])->name('penduduk.store');
+
 
 Route::get('/dashboard-admin', function () {
     return view('pages.app.dashboard-sig');
 })->name('dashboard.admin');
 
+Route::get('/list-data-penduduk', [PendudukController::class, 'viewPenduduk'])->name('list.data.penduduk');
+Route::get('/penduduk/edit/{id}', [PendudukController::class, 'edit'])->name('penduduk.edit');
+Route::put('/penduduk/update/{id}', [PendudukController::class, 'update'])->name('penduduk.update');
+Route::delete('/penduduk/delete/{id}', [PendudukController::class, 'delete'])->name('penduduk.delete');
+
 // Route untuk CRUD PemetaanIspa
 Route::post('/tambah-data/store', [PemetaanIspaController::class, 'store'])->name('pemetaan.store');
 Route::get('/list-data', [PemetaanIspaController::class, 'index'])->name('list.data');
-Route::get('/get-locations', [PemetaanIspaController::class, 'getLocations'])->name('get.locations');
+Route::get('/edit-data/{id}', [PemetaanIspaController::class, 'edit'])->name('pemetaan.edit');
 Route::put('/update-data/{id}', [PemetaanIspaController::class, 'update'])->name('pemetaan.update');
 Route::delete('/delete-data/{id}', [PemetaanIspaController::class, 'destroy'])->name('pemetaan.destroy');
+Route::get('/get-locations', [PemetaanIspaController::class, 'getLocations'])->name('get.locations');
+
+Route::get('/data-desa', [PemetaanIspaController::class, 'showDataDesa'])->name('data.desa');
+Route::get('/data-desa/{id}', [PemetaanIspaController::class, 'showDetail'])->name('data.desa.detail');
+
+
+
+
+
+
 
 // Route::get('/dashboard-home', function () {
 //     return view('pages.depan.dashboard-home', ['type_menu' => '']);
 // })->name('dashboard.home');
+
+
 
 
 

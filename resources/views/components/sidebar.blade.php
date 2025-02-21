@@ -31,11 +31,19 @@
                 <ul class="dropdown-menu">
                     <li>
                         <a class="nav-link"
-                            href="{{ route('list.data') }}">Data List</a>
+                            href="{{ route('list.data') }}">Data List Desa</a>
                     </li>
                     <li>
                         <a class="nav-link"
-                            href="{{ route('tambah.data') }}">Tambah Data</a>
+                            href="{{ route('tambah.data') }}">Tambah Data Desa </a>
+                    </li>
+                    <li>
+                        <a class="nav-link"
+                            href="{{ route('tambah.data.penduduk') }}">Tambah Data Penduduk</a>
+                    </li>
+                    <li>
+                        <a class="nav-link"
+                            href="{{ route('list.data.penduduk') }}">Data List Penduduk</a>
                     </li>
                 </ul>
             </li>
